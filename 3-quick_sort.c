@@ -1,71 +1,81 @@
 #include "sort.h"
+
 /**
-  * quick_sort - quicksort algorithm
-  * @array: array to be sorted
-  * @size: size of array
-  */
+ * quick_sort - function that sorts an array of
+ * integers in ascending order using the Quick sort algorithm
+ * @array: input array
+ *@size: array size
+ */
 void quick_sort(int *array, size_t size)
 {
-	if (array == NULL || size <= 1)
+	int high = (size - 1), low = 0;
+
+	if (array == NULL)
 		return;
-	sort_alg(array, 0, size - 1, size);
+	recursion(array, low, high, size);
 }
 
 /**
-  * sort_alg - recursive sorting algorithm
-  * @arr: array
-  * @left: leftmost index
-  * @right: rightmost index
-  * @size: full size of array
-  */
-void sort_alg(int *arr, int left, int right, size_t size)
+ * recursion - function that executes recursion
+ * @array: input array
+ * @low: left side of the matrix
+ * @high: rigth side of the matrix
+ * @size: array size
+ */
+void recursion(int *array, int low, int high, size_t size)
 {
-	int pivot;
+	int depart;
 
-	if (left < right)
+	if (low < high)
 	{
-		pivot = split(arr, left, right, size);
-		sort_alg(arr, left, pivot - 1, size);
-		sort_alg(arr, pivot + 1, right, size);
+		depart = partition(array, low, high, size);
+		recursion(array, low, depart - 1, size);
+		recursion(array, depart + 1, high, size);
 	}
 }
 
 /**
-  * split - split array
-  * @arr: array
-  * @left: leftmost index
-  * @right: rightmost index
-  * @size: full array size
-  * Return: pivot index
-  */
-int split(int *arr, int left, int right, size_t size)
+ * partition - partition an array
+ * @array: input array
+ * @low: left side of the matrix
+ * @high: right side of the matrix
+ * @size: array size
+ *
+ * Return: the position in i + 1
+ */
+int partition(int *array, int low, int high, size_t size)
 {
-	int i, i2, pivot, tmp;
+	int pivot = array[high], i = (low), j;
 
-	pivot = arr[right];
-	i = left;
-
-	for (i2 = left; i2 < right; i2++)
+	for (j = low; j < high; j++)
 	{
-		if (arr[i2] < pivot)
+		if (array[j] < pivot)
 		{
-			if (i != i2)
+			if (array[j] != array[i])
 			{
-				tmp = arr[i2];
-				arr[i2] = arr[i];
-				arr[i] = tmp;
-				print_array(arr, size);
+				swap(&array[i], &array[j]);
+				print_array(array, size);
 			}
 			i++;
 		}
 	}
-	if (arr[i] != arr[right])
+	if (array[high] != array[i])
 	{
-		tmp = arr[i];
-		arr[i] = arr[right];
-		arr[right] = tmp;
-		print_array(arr, size);
+		swap(&array[i], &array[high]);
+		print_array(array, size);
 	}
-
 	return (i);
+}
+
+/**
+ * swap - swaps the values of two integers
+ * @xp: pointer to int to be swapped
+ * @yp: pointer to other int to be swapped
+ */
+void swap(int *xp, int *yp)
+{
+	size_t temp = *xp;
+
+	*xp = *yp;
+	*yp = temp;
 }
